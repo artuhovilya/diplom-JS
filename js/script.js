@@ -1,11 +1,25 @@
 "use strict"
 
-var ageInput = document.getElementById('age');
-var heightInput = document.getElementById('height');
-var weightInput = document.getElementById('weight');
-var submitButton = document.querySelector('.form__submit-button');
-var resetButton = document.querySelector('.form__reset-button');
-var activityRadioButtons = document.getElementsByName('activity');
-var genderRadioButtons = document.getElementsByName('gender');
-var summaryBlock = document.querySelector('section');
-var inputElement = document.getElementsByClassName('input__wrapper');
+const COEFFICIENTS = {
+    min: 1.2,
+    low: 1.375,
+    medium: 1.55,
+    high: 1.725,
+    max: 1.9,
+  };
+  
+  const COEFFICIENTS_FORMULA = {
+    forWeight: 10,
+    forHeight: 6.25,
+    forAge: 5,
+    forMale: 5,
+    forFemale: 161,
+  }
+  
+  let parameters = {}
+  
+  const form = document.querySelector('.form');
+  const inputGroups = form.querySelectorAll('.inputs-group input');
+  const buttonResult = form.querySelector('.form__submit-button');
+  const buttonReset = form.querySelector('.form__reset-button');
+  const counterResult = document.querySelector('.counter__result');
