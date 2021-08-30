@@ -72,3 +72,83 @@ function getParameters() {
     heading,
   }
 }
+
+function calculateCalories(parameters) {
+  let N = (COEFFICIENTS_FORMULA.forWeight * parameters.weight) + (COEFFICIENTS_FORMULA.forHeight * parameters.height) - (COEFFICIENTS_FORMULA.forAge * parameters.age);
+  let normal;
+
+  switch (parameters.gender) {
+    case 'male':
+      N += COEFFICIENTS_FORMULA.forMale;
+      break;
+    case 'female':
+      N += COEFFICIENTS_FORMULA.forFemale;
+      break;
+  }
+
+  switch (parameters.heading) {
+    case 'min':
+      normal = N * COEFFICIENTS.min
+      break;
+    case 'low':
+      normal = N * COEFFICIENTS.low
+      break;
+    case 'medium':
+      normal = N * COEFFICIENTS.medium
+      break;
+    case 'high':
+      normal = N * COEFFICIENTS.high
+      break;
+    case 'max':
+      normal = N * COEFFICIENTS.max
+      break;
+  }
+
+  let percents = (normal/100) * 15;
+
+  let weightNormal = (normal).toFixed(0);
+  let weightGain = (normal + percents).toFixed(0);
+  let weightLoss = (normal - percents).toFixed(0);
+
+  return {
+    weightNormal,
+    weightGain,
+    weightLoss
+  }
+}
+
+function showResults(result) {
+  const caloriesNorm = counterResult.querySelector('#calories-norm');
+  const caloriesMin = counterResult.querySelector('#calories-minimal');
+  const caloriesMax = counterResult.querySelector('#calories-maximal');
+
+  function insertingResults() {
+    caloriesNorm.textContent = result.weightNormal;
+    caloriesMin.textContent = result.weightLoss;
+    caloriesMax.textContent = result.weightGain;
+  }
+
+  if (!counterResult.classList.contains('counter__result--hidden')) {
+    insertingResults();
+  } else {
+    insertingResults();
+    counterResult.classList.remove('counter__result--hidden')
+  }
+}
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  let calories = calculateCalories(getParameters());
+
+  buttonResult.blur();
+  showResults(calories);
+  counterResult.scrollIntoView()
+})
+
+form.addEventListener('reset', () => {
+  counterResult.classList.add('counter__result--hidden');
+  buttonResult.disabled = true;
+  buttonReset.disabled = true;
+  window.scroll(0, 0)
+})
